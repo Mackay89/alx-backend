@@ -5,7 +5,7 @@ Deletion-resilient hypermedia pagination
 
 import csv
 from typing import List, Dict, Any
-from .2-hypermedia_pagination import Server
+from hypermedia_pagination import Server
 
 class Server(Server):
     """Server class to paginate a database of popular baby names with deletion resilience."""
