@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-""" Simple pagination"""
+""" Simple pagination """
 import csv
 from typing import List, Tuple
 
@@ -10,17 +10,16 @@ class Server:
     DATA_FILE = "Popular_Baby_Names.csv"
 
     def __init__(self):
-        self.__dataset: List[List[str]] = None
+        self.__dataset: List[List[str]] = []
 
     def dataset(self) -> List[List[str]]:
         """Cached dataset
         """
-        if self.__dataset is None:
+        if not self.__dataset:
             try:
                 with open(self.DATA_FILE) as f:
                     reader = csv.reader(f)
-                    dataset = [row for row in reader]
-                self.__dataset = dataset[1:]
+                    self.__dataset = [row for row in reader][1:]  # Skip header row
             except FileNotFoundError:
                 self.__dataset = []
 
@@ -35,12 +34,12 @@ class Server:
         """
         assert isinstance(page, int) and page > 0, "Page number must be a positive integer."
         assert isinstance(page_size, int) and page_size > 0, "Page size must be a positive integer."
-        csv_size = len(self.dataset())
+        dataset = self.dataset()
         start, end = index_range(page, page_size)
-        end = min(end, csv_size)
-        if start >= csv_size:
+        end = min(end, len(dataset))
+        if start >= len(dataset):
             return []
-        return self.dataset()[start:end]
+        return dataset[start:end]
 
 
 def index_range(page: int, page_size: int) -> Tuple[int, int]:
@@ -50,5 +49,5 @@ def index_range(page: int, page_size: int) -> Tuple[int, int]:
     :param page_size: The number of items per page.
     :return: A tuple of (start, end) indices.
     """
-    return ((page - 1) * page_size, page * page_size)
+    return (page - 1) * page_size, page * page_size
 
