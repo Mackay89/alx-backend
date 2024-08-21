@@ -18,7 +18,8 @@ class LRUCache(BaseCaching):
         if key is None or item is None:
             return
 
-        # If the item already exists, move it to the end to mark it as recently used
+        # If the item already exists, move it to the end
+        # to mark it as recently used
         if key in self.cache_data:
             self.cache_data.move_to_end(key)
 
@@ -35,4 +36,3 @@ class LRUCache(BaseCaching):
         if key is None:
             return None
         return self.cache_data.get(key, None)
-
