@@ -18,3 +18,4 @@ my_cache.put("E", "Battery")
 my_cache.put("A", "Street")
 my_cache.print_cache()
 print(my_cache.get("A"))
+
