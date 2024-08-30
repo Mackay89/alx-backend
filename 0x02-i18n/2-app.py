@@ -20,7 +20,6 @@ class Config:
 
 app = Flask(__name__)
 app.config.from_object(Config)
-app.config['BABEL_SUPPORTED_LOCALES'] = ['en', 'fr', 'es']
 babel = Babel(app)
 
 
@@ -30,7 +29,7 @@ def get_locale() -> str:
     Determine the best match with the supported languages.
 
     Returns:
-        The best matched language from the request headers.
+        The best-matched language from the request headers.
     """
     return request.accept_languages.best_match(app.config['LANGUAGES'])
 
