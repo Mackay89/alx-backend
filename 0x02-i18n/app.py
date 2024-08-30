@@ -1,19 +1,10 @@
 #!/usr/bin/env python3
 """
-A Basic flask application
+A Basic Flask application
 """
-import datetime
-from typing import (
-    Dict, Union
-)
-import pytz
-
-from flask import Flask
-from flask import g, request
-from flask import render_template
+from typing import Dict, Union
+from flask import Flask, g, request, render_template
 from flask_babel import Babel
-from flask_babel import format_datetime
-
 
 class Config(object):
     """
@@ -23,15 +14,12 @@ class Config(object):
     BABEL_DEFAULT_LOCALE = 'en'
     BABEL_DEFAULT_TIMEZONE = 'UTC'
 
-
 # Instantiate the application object
 app = Flask(__name__)
-app.config['BABEL_DEFAULT_LOCALE'] = 'en'
 app.config.from_object(Config)
 
 # Wrap the application with Babel
 babel = Babel(app)
-
 
 users = {
     1: {"name": "Balou", "locale": "fr", "timezone": "Europe/Paris"},
@@ -39,7 +27,6 @@ users = {
     3: {"name": "Spock", "locale": "kg", "timezone": "Vulcan"},
     4: {"name": "Teletubby", "locale": None, "timezone": "Europe/London"},
 }
-
 
 def get_user(id) -> Union[Dict[str, Union[str, None]], None]:
     """
@@ -49,10 +36,9 @@ def get_user(id) -> Union[Dict[str, Union[str, None]], None]:
     Returns:
         (Dict): user dictionary if id is valid else None
     """
-    return users.get(int(id), None)
+    return users.get(int(id), {})
 
-
-@babel.localeselector
+@babel.locale_selector_func
 def get_locale() -> str:
     """
     Gets locale from request object
@@ -67,38 +53,20 @@ def get_locale() -> str:
         if locale and locale in Config.LANGUAGES:
             return locale
 
-
-@babel.timezoneselector
-def get_timezone() -> str:
-    """
-    Gets timezone from request object
-    """
-    tz = request.args.get('timezone', '').strip()
-    if not tz and g.user:
-        tz = g.user['timezone']
-    try:
-        tz = pytz.timezone(tz).zone
-    except pytz.exceptions.UnknownTimeZoneError:
-        tz = app.config['BABEL_DEFAULT_TIMEZONE']
-    return tz
-
-
 @app.before_request
 def before_request() -> None:
     """
     Adds valid user to the global session object `g`
     """
     setattr(g, 'user', get_user(request.args.get('login_as', 0)))
-    setattr(g, 'time', format_datetime(datetime.datetime.now()))
-
 
 @app.route('/', strict_slashes=False)
 def index() -> str:
     """
-    Renders a basic html template
+    Renders a basic HTML template
     """
-    return render_template('index.html')
-
+    return render_template('6-index.html')
 
 if __name__ == '__main__':
     app.run()
+
